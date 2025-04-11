@@ -1,0 +1,205 @@
+[
+  {
+    "equipment_name": "Plow",
+    "crop": ["Rice", "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut","Sugarcane", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits"],
+    "category": "Land Preparation Equipment",
+    "image": "plow",
+    "details": "Used for primary tillage to turn over and break up soil, bury crop residues, and prepare the land for sowing."
+  },
+  {
+    "equipment_name": "Disk Plow",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut", "Cotton", "Sugarcane","Ragi"],
+    "category": "Land Preparation Equipment",
+    "image": "diskplow",
+    "details": "Used for cutting and turning over the soil to prepare land for sowing, especially in hard and dry conditions."
+  },
+  {
+    "equipment_name": "Harrow",
+    "crop": [ "Rice", "Corn", "Wheat", "Soybean", "Groundnut", "Cotton", "Sugarcane", "Vegetable","Ragi"],
+    "category": "Land Preparation Equipment",
+    "image": "harrow",
+    "details": "Breaks up and smoothens soil after plowing, removes weeds, and improves seedbed conditions."
+  },
+  {
+    "equipment_name": "Rotavator",
+    "crop": ["Ragi","Rice", "Corn", "Wheat", "Soybean", "Groundnut", "Vegetable", "Sugarcane", "Potato", "Ginger"],
+    "category": "Land Preparation Equipment",
+    "image": "rotavator",
+    "details": "Uses rotating blades to break up and aerate soil, improving its texture for planting."
+  },
+  {
+    "equipment_name": "Cultivator",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut", "Cotton", "Sugarcane","Ragi"],
+    "category": "Land Preparation Equipment",
+    "image": "cultivator",
+    "details": "Used for secondary tillage to stir and pulverize soil, uproot weeds, and mix soil nutrients."
+  },
+  {
+    "equipment_name": "Leveller",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut", "Cotton", "Sugarcane","Ragi"],
+    "category": "Land Preparation Equipment",
+    "image": "leveller",
+    "details": "Levels the land surface for uniform irrigation and better crop establishment."
+  },
+  {
+    "equipment_name": "Seed Drill",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut", "Chickpea", "Cotton"],
+    "category": "Sowing & Planting Equipment",
+    "image": "seeddrill",
+    "details": "Sows seeds at a uniform depth and spacing, ensuring proper germination and crop growth."
+  },
+  {
+    "equipment_name": "Planter",
+    "crop": ["Cotton", "Groundnut", "Chickpea", "Vegetable"],
+    "category": "Sowing & Planting Equipment",
+    "image": "planter",
+    "details": "Precision planting equipment that places seeds at exact depths and spacing."
+  },
+  {
+    "equipment_name": "Potato Planter",
+    "crop": ["Potato"],
+    "category": "Sowing & Planting Equipment",
+    "image": "potatoplanter",
+    "details": "Precision planting equipment that places potato at exact depths and spacing."
+  },
+  {
+    "equipment_name": "Broadcast Seeder",
+    "crop": ["Ragi", "Corn", "Wheat", "Soybean", "Groundnut"],
+    "category": "Sowing & Planting Equipment",
+    "image": "broadcastseeder",
+    "details": "Scatters seeds over a large area quickly, used for crops that do not require precise planting."
+  },
+  {
+    "equipment_name": "Sprinkler System",
+    "crop": [ "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits"],
+    "category": "Irrigation Equipment",
+    "image": "sprinklersystem",
+    "details": "Delivers water in the form of rainfall using pipes and rotating nozzles for uniform irrigation."
+  },
+  {
+    "equipment_name": "Drip Irrigation System",
+    "crop": [ "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits"],
+    "category": "Irrigation Equipment",
+    "image": "dripirrigation",
+    "details": "Delivers water directly to plant roots in a controlled manner, reducing water wastage."
+  },
+  {
+    "equipment_name": "Fertilizer Spreader",
+    "crop": [ "Rice", "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits","Areca nut", "Coconut"],
+    "category": "Fertilizer & Pesticide Equipment",
+    "image": "fertilizerspreader",
+    "details": "Evenly distributes fertilizers across fields to ensure uniform crop nutrition."
+  },
+  {
+    "equipment_name": "Drone Sprayers",
+    "crop": [ "Rice", "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits","Areca nut", "Coconut"],
+    "category": "Fertilizer & Pesticide Equipment",
+    "image": "drone1",
+    "details": "Uses drones to spray fertilizers and pesticides with precision and efficiency."
+  },
+  {
+    "equipment_name": "Tractor-mounted Sprayers",
+    "crop": ["Rice", "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits","Areca nut", "Coconut"],
+    "category": "Fertilizer & Pesticide Equipment",
+    "image": "tractorfertilizerspreader",
+    "details": "Mounted on tractors to spray pesticides and fertilizers over large fields quickly."
+  },
+  {
+    "equipment_name": "Combine Harvester",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut"],
+    "category": "Harvesting Equipment",
+    "image": "combineharvester",
+    "details": "Combines reaping, threshing, and winnowing into one operation to harvest grain crops."
+  },
+  {
+    "equipment_name": "Sugarcane Harvester",
+    "crop": ["Sugarcane"],
+    "category": "Harvesting Equipment",
+    "image": "sugarcaneHarvester",
+    "details": "A specialized machine designed to cut, process, and load sugarcane efficiently."
+  },
+  {
+    "equipment_name": "Potato Digger",
+    "crop": ["Potato"],
+    "category": "Harvesting Equipment",
+    "image": "potatodigger",
+    "details": "A machine used for harvesting potatoes by lifting them from the soil and separating them from dirt and plant residues."
+  },
+  {
+    "equipment_name": "Cotton Picker",
+    "crop": ["Cotton"],
+    "category": "Harvesting Equipment",
+    "image": "cottonpicker",
+    "details": "A mechanized harvester designed to pick cotton from the plants without damaging the fibers."
+  },
+  {
+    "equipment_name": "Reaper",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut","Ragi"],
+    "category": "Harvesting Equipment",
+    "image": "reaper",
+    "details": "Cuts crops efficiently, making harvesting easier and faster."
+  },
+  {
+    "equipment_name": "Threshing Machine",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut","Ragi"],
+    "category": "Harvesting Equipment",
+    "image": "threshingmachine",
+    "details": "Separates grains from harvested crops, improving post-harvest efficiency."
+  },
+  {
+    "equipment_name": "Baler",
+    "crop": ["Rice", "Ragi", "Wheat", "Soybean"],
+    "category": "Harvesting Equipment",
+    "image": "baler",
+    "details": "Compresses harvested crops into compact bales for easy storage and transportation."
+  },
+  {
+    "equipment_name": "Winnower",
+    "crop": ["Rice", "Wheat", "Corn", "Ragi", "Chickpea", "Soybean", "Groundnut"],
+    "category": "Post-Harvest Equipment",
+    "image": "winnower",
+    "details": "Separates grain from chaff by using wind or air flow."
+  },
+  {
+    "equipment_name": "Grain Dryer",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut"],
+    "category": "Post-Harvest Equipment",
+    "image": "graindryer",
+    "details": "Reduces moisture content in grains, preventing spoilage and improving storage life."
+  },
+  {
+    "equipment_name": "Milling Machine",
+    "crop": ["Rice", "Corn", "Wheat", "Soybean", "Groundnut"],
+    "category": "Post-Harvest Equipment",
+    "image": "millingmachine",
+    "details": "Processes grains into flour or other forms for consumption and storage."
+  },
+  {
+    "equipment_name": "Tractors",
+    "crop": ["Rice", "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits","Areca nut", "Coconut"],
+    "category": "Transport & Handling Equipment",
+    "image": "tract3",
+    "details": "Versatile machines used for plowing, tilling, harvesting, and transporting farm goods."
+  },
+  {
+    "equipment_name": "Trailers",
+    "crop": ["Rice", "Corn", "Wheat", "Ragi", "Chickpea", "Soybean", "Groundnut", "Potato", "Cotton", "Sugarcane", "Vegetable", "Ginger", "Areca nut", "Coconut", "Fruits","Areca nut", "Coconut"],
+    "category": "Transport & Handling Equipment",
+    "image": "trailers",
+    "details": "Used for transporting crops, equipment, and other agricultural materials."
+  },
+  {
+    "equipment_name": "Manual Coconut & Areca Nut Climber",
+    "crop": ["Coconut", "Areca nut"],
+    "category": "Specialized Equipment",
+    "image": "coconutmanualclimb",
+    "details": "A manually operated climbing device that assists farmers in safely ascending coconut and areca nut trees for harvesting. It reduces physical effort compared to traditional climbing methods."
+  },
+  {
+    "equipment_name": "Motorized Coconut & Areca Nut Climber",
+    "crop": ["Coconut", "Areca nut"],
+    "category": "Specialized Equipment",
+    "image": "coconutmotorclimb",
+    "details": "A battery-powered or motor-driven climbing device that enables farmers to climb trees effortlessly, improving safety and efficiency during harvesting."
+  }
+]
