@@ -1,7 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.serialization") // Add this line
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.gms.google-services") // Add this line
 }
 
 android {
@@ -63,6 +64,17 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.firebase:firebase-analytics")
+    // Firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+
+    // Firebase Auth
+    implementation("com.google.firebase:firebase-auth")
+
+    // Other Firebase services (add if needed)
+    // implementation("com.google.firebase:firebase-database")
+    // implementation("com.google.firebase:firebase-storage")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
