@@ -172,12 +172,12 @@ fun SpecificCategoryScreen(
             }
         }
         // Task Bar (always visible)
-        TaskBar(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .zIndex(10f)
-        )
-    }
+//        TaskBar(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .zIndex(10f)
+//        )
+  }
 }
 
 @Composable

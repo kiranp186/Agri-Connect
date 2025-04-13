@@ -458,7 +458,7 @@ class FarmTechHomeScreen {
                 )
 
                 BottomNavItem(
-                    icon = Icons.Default.Star,
+                    icon = Icons.Default.List,
                     label = "Catagories",
                     selected = true
                 )

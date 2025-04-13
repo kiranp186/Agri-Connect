@@ -1,3 +1,4 @@
+package com.tutorials.agriconnect
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -106,9 +107,9 @@ fun GetStartedScreen(onGetStartedClick: () -> Unit = {}) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Get Started button
+            // Get Started button - now with navigation callback
             Button(
-                onClick = onGetStartedClick,
+                onClick = onGetStartedClick, // This will trigger navigation to login screen
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)

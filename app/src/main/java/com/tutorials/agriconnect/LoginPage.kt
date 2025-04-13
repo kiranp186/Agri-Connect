@@ -1,3 +1,5 @@
+package com.tutorials.agriconnect
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,7 +31,10 @@ class LoginPage : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onSignUpClick: () -> Unit = {},
+    onLoginClick: () -> Unit = {}
+) {
     var username by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -82,10 +87,11 @@ fun LoginScreen() {
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             singleLine = true,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Text(
-                        text = if (passwordVisible)"👁" else "👁‍🗨",
+                        text = if (passwordVisible) "👁" else "👁‍🗨",
                         fontSize = 18.sp
                     )
                 }
@@ -93,10 +99,11 @@ fun LoginScreen() {
         )
 
         Button(
-            onClick = { /* Handle login logic here */ },
+            onClick = onLoginClick, // Pass the click to the navigation handler
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp).padding(4.dp)
+                .height(50.dp)
+                .padding(4.dp)
         ) {
             Text("Login")
         }
@@ -107,7 +114,8 @@ fun LoginScreen() {
             Text("Forgot Password?")
         }
 
-        TextButton(onClick = { /* Handle sign up */ }) {
+        // Sign Up button now with navigation
+        TextButton(onClick = onSignUpClick) {
             Text("Don't have an account? Sign Up")
         }
     }
@@ -115,10 +123,8 @@ fun LoginScreen() {
 
 @Preview
 @Composable
-fun DefaultPreview() {
-    // Replace with your actual theme name
-// This is the composable from your other file
-    fun LoginPage(){
-
-        }
+fun LoginPreview() {
+    MaterialTheme {
+        LoginScreen()
+    }
 }

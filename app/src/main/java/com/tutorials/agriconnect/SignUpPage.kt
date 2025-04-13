@@ -1,3 +1,5 @@
+package com.tutorials.agriconnect
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,7 +31,9 @@ class SignUpPage : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignupScreen() {
+fun SignupScreen(
+    onNavigateBack: () -> Unit = {}
+) {
     // State variables for form fields
     var username by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
@@ -251,29 +255,41 @@ fun SignupScreen() {
             maxLines = 4
         )
 
-        // Signup button
-        Button(
-            onClick = { /* Handle signup logic */ },
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
-                .padding(bottom = 16.dp)
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Sign Up")
+            // Back button
+            OutlinedButton(
+                onClick = onNavigateBack,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp)
+                    .padding(end = 8.dp)
+            ) {
+                Text("Back")
+            }
+
+            // Sign Up button
+            Button(
+                onClick = { /* Handle signup logic */ },
+                modifier = Modifier
+                    .weight(2f)
+                    .height(50.dp)
+                    .padding(start = 8.dp)
+            ) {
+                Text("Sign Up")
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
-
-
-@Preview(showBackground=true)
-
+@Preview(showBackground = true)
 @Composable
-
-fun APreview(){
-
+fun SignupPreview() {
     SignupScreen()
-
 }

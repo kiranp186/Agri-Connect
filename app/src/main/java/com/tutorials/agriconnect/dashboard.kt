@@ -43,15 +43,17 @@ import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
-
 /**
  * A complete Farmers App screen component with added commodity images
+ * Updated to support navigation
  */
 @Composable
-fun FarmersAppScreen() {
+fun FarmersAppScreen(navController: NavController = rememberNavController()) {
     val scrollState = rememberScrollState()
     var isSidebarVisible by remember { mutableStateOf(false) }
 
@@ -165,7 +167,7 @@ fun FarmersAppScreen() {
                 NewScrollableSection()
 
                 // Commodity Scroll Component
-                CommoditiesSection()
+                CommoditiesSection(navController)
 
                 // My Fields Section
                 MyFieldsSection()
@@ -177,14 +179,16 @@ fun FarmersAppScreen() {
             TaskBar(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .zIndex(10f)
+                    .zIndex(10f),
+                navController = navController
             )
         }
 
         // Sidebar overlay (animated)
         SidebarOverlay(
             isVisible = isSidebarVisible,
-            onDismiss = { isSidebarVisible = false }
+            onDismiss = { isSidebarVisible = false },
+            navController = navController
         )
     }
 }
@@ -192,7 +196,8 @@ fun FarmersAppScreen() {
 @Composable
 fun SidebarOverlay(
     isVisible: Boolean,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    navController: NavController
 ) {
     // Track if the language dropdown is expanded
     var isLanguageDropdownExpanded by remember { mutableStateOf(false) }
@@ -247,7 +252,11 @@ fun SidebarOverlay(
 
                     // Sidebar menu items
                     SidebarMenuItem(
-                        title = "My Account"
+                        title = "My Account",
+                        onClick = {
+                            onDismiss()
+                            // You can add navigation here if needed
+                        }
                     ) {
                         Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null)
                     }
@@ -278,8 +287,6 @@ fun SidebarOverlay(
                             )
 
                             Spacer(modifier = Modifier.weight(1f))
-
-
                         }
 
                         // Language dropdown menu
@@ -327,19 +334,22 @@ fun SidebarOverlay(
                     }
 
                     SidebarMenuItem(
-                        title = "Wish List"
+                        title = "Wish List",
+                        onClick = { /* Handle navigation */ }
                     ) {
                         Icon(imageVector = Icons.Default.Favorite, contentDescription = null)
                     }
 
                     SidebarMenuItem(
-                        title = "My Bookings"
+                        title = "My Bookings",
+                        onClick = { /* Handle navigation */ }
                     ) {
                         Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = null)
                     }
 
                     SidebarMenuItem(
-                        title = "Blogs"
+                        title = "Blogs",
+                        onClick = { /* Handle navigation */ }
                     ) {
                         Icon(imageVector = Icons.Default.MailOutline, contentDescription = null)
                     }
@@ -348,7 +358,14 @@ fun SidebarOverlay(
 
                     // Logout at the bottom
                     SidebarMenuItem(
-                        title = "Logout"
+                        title = "Logout",
+                        onClick = {
+                            onDismiss()
+                            // Navigate back to login
+                            navController.navigate("login") {
+                                popUpTo("dashboard") { inclusive = true }
+                            }
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Default.ExitToApp,
@@ -365,6 +382,7 @@ fun SidebarOverlay(
 @Composable
 fun SidebarMenuItem(
     title: String,
+    onClick: () -> Unit = {},
     icon: @Composable () -> Unit = {
         Box(
             modifier = Modifier
@@ -377,7 +395,7 @@ fun SidebarMenuItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp)
-            .clickable { /* Handle menu item click */ },
+            .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Icon content
@@ -393,8 +411,9 @@ fun SidebarMenuItem(
         )
     }
 }
+
 @Composable
-fun TaskBar(modifier: Modifier = Modifier) {
+fun TaskBar(modifier: Modifier = Modifier, navController: NavController) {
     // Track the selected index
     var selectedIndex by remember { mutableStateOf(0) }
 
@@ -420,7 +439,10 @@ fun TaskBar(modifier: Modifier = Modifier) {
             },
             text = "Home",
             isSelected = selectedIndex == 0,
-            onClick = { selectedIndex = 0 }
+            onClick = {
+                selectedIndex = 0
+                // No navigation needed as we're already on the home screen
+            }
         )
 
         // Categories
@@ -436,7 +458,10 @@ fun TaskBar(modifier: Modifier = Modifier) {
             },
             text = "Categories",
             isSelected = selectedIndex == 1,
-            onClick = { selectedIndex = 1 }
+            onClick = {
+                selectedIndex = 1
+                // You can add navigation to categories screen if needed
+            }
         )
 
         // My Bookings
@@ -451,7 +476,10 @@ fun TaskBar(modifier: Modifier = Modifier) {
             },
             text = "My Bookings",
             isSelected = selectedIndex == 2,
-            onClick = { selectedIndex = 2 }
+            onClick = {
+                selectedIndex = 2
+                // You can add navigation to bookings screen if needed
+            }
         )
 
         // My Account
@@ -466,7 +494,10 @@ fun TaskBar(modifier: Modifier = Modifier) {
             },
             text = "My Account",
             isSelected = selectedIndex == 3,
-            onClick = { selectedIndex = 3 }
+            onClick = {
+                selectedIndex = 3
+                // You can add navigation to account screen if needed
+            }
         )
     }
 }
@@ -498,7 +529,6 @@ fun TaskBarItem(
         )
     }
 }
-
 
 @Composable
 private fun NewScrollableSection() {
@@ -618,8 +648,9 @@ private data class FeaturedItem(
     val title: String,
     val imageResId: Int
 )
+
 @Composable
-private fun CommoditiesSection() {
+private fun CommoditiesSection(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -654,7 +685,6 @@ private fun CommoditiesSection() {
             Commodity("ChickPea", R.drawable.chickpea),
             Commodity("Coconut", R.drawable.coconut),
             Commodity("Fruits", R.drawable.fruits)
-
         )
 
         // Create an infinite list by repeating the original list
@@ -669,7 +699,13 @@ private fun CommoditiesSection() {
         ) {
             items(infiniteList1.size) { index ->
                 val commodity = infiniteList1[index]
-                CommodityBox(commodity)
+                CommodityBox(
+                    commodity = commodity,
+                    onClick = {
+                        // Navigate to crop specific screen when commodity is clicked
+                        navController.navigate("crop_specific")
+                    }
+                )
             }
         }
 
@@ -688,17 +724,25 @@ private fun CommoditiesSection() {
         ) {
             items(infiniteList2.size) { index ->
                 val commodity = infiniteList2[index]
-                CommodityBox(commodity)
+                CommodityBox(
+                    commodity = commodity,
+                    onClick = {
+                        // Navigate to crop specific screen when commodity is clicked
+                        navController.navigate("crop_specific")
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun CommodityBox(commodity: Commodity) {
+private fun CommodityBox(commodity: Commodity, onClick: () -> Unit = {}) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(64.dp)
+        modifier = Modifier
+            .width(64.dp)
+            .clickable(onClick = onClick)
     ) {
         // Image container with white background
         Box(
@@ -712,7 +756,7 @@ private fun CommodityBox(commodity: Commodity) {
             Image(
                 painter = painterResource(id = commodity.imageResId),
                 contentDescription = commodity.name,
-                modifier = Modifier//.fillMaxSize()    //for full size icon
+                modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
@@ -840,10 +884,11 @@ private fun MyFieldsSection() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = selectedCrop!!,
+                        text = "selectedCrop",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
+
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -867,6 +912,7 @@ private fun MyFieldsSection() {
         }
     }
 }
+
 /**
  * A data class representing a commodity with a name and image resource
  */
@@ -877,6 +923,6 @@ private data class Commodity(
 
 @Preview(showBackground = true)
 @Composable
-fun Preview() {
+fun FarmersAppScreenPreview() {
     FarmersAppScreen()
 }

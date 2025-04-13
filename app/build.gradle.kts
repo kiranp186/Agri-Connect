@@ -50,7 +50,7 @@ android {
 dependencies {
     // Kotlin Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-
+    implementation("androidx.navigation:navigation-compose:2.7.1") // Use the latest version available
     // Existing dependencies
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
