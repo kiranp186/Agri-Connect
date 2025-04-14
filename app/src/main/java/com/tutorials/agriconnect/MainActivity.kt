@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    FarmTechHomeScreen().FarmTechApp()
+                    AppNavigation()
                 }
             }
         }
@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val authViewModel = androidx.lifecycle.viewmodel.compose.viewModel<AuthViewModel>()
 
     NavHost(navController = navController, startDestination = "get_started") {
         composable("get_started") {
@@ -50,21 +51,27 @@ fun AppNavigation() {
                         // Clear the back stack so user can't go back to login after successful login
                         popUpTo("login") { inclusive = true }
                     }
-                }
+                },
+                authViewModel = authViewModel
             )
         }
 
         composable("signup") {
             SignupScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onSignupSuccess = {
+                    // Navigate to dashboard when signup is successful
+                    navController.navigate("dashboard") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                authViewModel = authViewModel
             )
         }
 
         composable("dashboard") {
             FarmersAppScreen()
         }
-
-
     }
 }
 
