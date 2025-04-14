@@ -54,7 +54,16 @@ fun AppNavigation() {
 
         composable("signup") {
             SignupScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                onSignupComplete = {
+                    // Navigate to dashboard when signup is complete
+                    navController.navigate("dashboard") {
+                        // Clear the back stack so user can't go back to signup/login after successful signup
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
             )
         }
 

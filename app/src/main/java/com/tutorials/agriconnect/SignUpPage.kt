@@ -32,7 +32,9 @@ class SignUpPage : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    onSignupComplete: () -> Unit = {}
+
 ) {
     // State variables for form fields
     var username by remember { mutableStateOf("") }
@@ -274,7 +276,9 @@ fun SignupScreen(
 
             // Sign Up button
             Button(
-                onClick = { /* Handle signup logic */ },
+                onClick = {
+                    onSignupComplete()
+                          },
                 modifier = Modifier
                     .weight(2f)
                     .height(50.dp)
