@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,14 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.compose.foundation.clickable
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun MyBookings() {
+fun MyBookings(navController: NavController = rememberNavController()) {
     val scrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -138,12 +143,91 @@ fun MyBookings() {
             }
 
             // Task Bar (always visible)
-//            TaskBar(
-//                modifier = Modifier
-//                    .align(Alignment.BottomCenter)
-//                    .zIndex(10f)
-//            )
+            BottomNavigationBar(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .zIndex(10f),
+                navController = navController
+            )
         }
+    }
+}
+
+@Composable
+private fun BottomNavigationBar(modifier: Modifier = Modifier,navController: NavController) {
+    Surface(
+        color = Color.White,
+        shadowElevation = 8.dp,
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            BottomNavitem(
+                icon = Icons.Outlined.Home,
+                label = "Home",
+                selected = false,
+                onClick = {
+                    navController.navigate("dashboard"){
+                        popUpTo("dashboard") {inclusive = true}
+                    }
+                }
+            )
+            BottomNavitem(
+                icon = Icons.Default.List,
+                label = "Catagories",
+                selected = false,
+                onClick = {
+                    navController.navigate("categories")
+                }
+            )
+            BottomNavitem(
+                icon = Icons.Outlined.ShoppingCart,
+                label = "My Bookings",
+                selected = true,
+                onClick = {
+
+                }
+            )
+            BottomNavitem(
+                icon = Icons.Outlined.AccountCircle,
+                label = "My Account",
+                selected = false,
+                onClick = {
+                    navController.navigate("account")
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomNavitem(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean = false,
+    onClick: ()-> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable (onClick = onClick)
+            .padding(8.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = if (selected) Color(0xFF4CAF50) else Color.Gray,
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = if (selected) Color(0xFF4CAF50) else Color.Gray
+        )
     }
 }
 

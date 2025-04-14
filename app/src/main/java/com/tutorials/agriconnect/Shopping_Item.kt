@@ -34,6 +34,8 @@ import com.tutorials.agriconnect.R
 
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 
 class FarmTechHomeScreen {
@@ -41,12 +43,12 @@ class FarmTechHomeScreen {
     // Main composable function for the Farm Tech home screen
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun FarmTechApp() {
+    fun FarmTechApp(navController: NavController = rememberNavController()) {
         val lightGreen = Color(0xFFE8F5E9)
 
         Scaffold(
             topBar = { AppTopBar() },
-            bottomBar = { BottomNavigationBar() },
+            bottomBar = { BottomNavigationBar(navController) },
             containerColor = Color(0xFF6A8E22)
         ) { paddingValues ->
             Column(
@@ -440,7 +442,7 @@ class FarmTechHomeScreen {
     }
 
     @Composable
-    private fun BottomNavigationBar() {
+    private fun BottomNavigationBar(navController: NavController) {
         Surface(
             color = Color.White,
             shadowElevation = 8.dp
@@ -454,7 +456,12 @@ class FarmTechHomeScreen {
                 BottomNavItem(
                     icon = Icons.Outlined.Home,
                     label = "Home",
-                    selected = false
+                    selected = false,
+                    onClick = {
+                        navController.navigate("dashboard") {
+                            popUpTo("dashboard") { inclusive = true }
+                        }
+                    }
                 )
 
                 BottomNavItem(
@@ -465,27 +472,36 @@ class FarmTechHomeScreen {
 
                 BottomNavItem(
                     icon = Icons.Outlined.ShoppingCart,
-                    label = "My Bookings"
+                    label = "My Bookings",
+                    selected = false,
+                    onClick = {
+                        navController.navigate("my_bookings")
+                    }
                 )
 
                 BottomNavItem(
                     icon = Icons.Outlined.AccountCircle,
-                    label = "My Account"
+                    label = "My Account",
+                    selected = false,
+                    onClick = {
+                        navController.navigate("account")
+                    }
                 )
             }
         }
     }
 
     @Composable
-    private fun BottomNavItem(
+     fun BottomNavItem(
         icon: androidx.compose.ui.graphics.vector.ImageVector,
         label: String,
-        selected: Boolean = false
+        selected: Boolean = false,
+        onClick: ()-> Unit
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .clickable { /* Handle navigation */ }
+                .clickable (onClick  = onClick)
                 .padding(8.dp)
         ) {
             Icon(

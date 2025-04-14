@@ -11,15 +11,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -40,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import android.util.Log
 
 @Composable
@@ -126,6 +134,7 @@ fun CropSpecificScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 72.dp)
+                .padding(bottom = 64.dp) // Add padding for the bottom navigation
         ) {
             if (equipmentList.isEmpty()) {
                 Box(
@@ -172,11 +181,74 @@ fun CropSpecificScreen(
         }
 
         // Task Bar (always visible)
-//        TaskBar(
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .zIndex(10f)
-//        )
+        BottomNavigationBar(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .zIndex(10f)
+        )
+    }
+}
+
+@Composable
+private fun BottomNavigationBar(modifier: Modifier = Modifier) {
+    Surface(
+        color = Color.White,
+        shadowElevation = 8.dp,
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            BottomNavItem(
+                icon = Icons.Outlined.Home,
+                label = "Home",
+                selected = false
+            )
+            BottomNavItem(
+                icon = Icons.Default.List,
+                label = "Catagories",
+                selected = true
+            )
+            BottomNavItem(
+                icon = Icons.Outlined.ShoppingCart,
+                label = "My Bookings"
+            )
+            BottomNavItem(
+                icon = Icons.Outlined.AccountCircle,
+                label = "My Account"
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomNavItem(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean = false
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable {
+                /* Handle navigation */
+            }
+            .padding(8.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = if (selected) Color(0xFF4CAF50) else Color.Gray,
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = if (selected) Color(0xFF4CAF50) else Color.Gray
+        )
     }
 }
 

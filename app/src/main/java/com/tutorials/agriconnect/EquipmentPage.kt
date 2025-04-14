@@ -17,6 +17,10 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,14 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
+import com.tutorials.agriconnect.ui.theme.AgriconnectTheme
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -90,7 +97,7 @@ fun EquipmentDetailPage() {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(bottom = 80.dp)  // Space for bottom button
+                .padding(bottom = 150.dp)  // Increased space for bottom button and nav bar
         ) {
             // Horizontal scrollable image carousel
             Box(
@@ -312,21 +319,29 @@ fun EquipmentDetailPage() {
                     reviewText = "The owner was professional and prompt, delivering the tractor on time and in well-maintained condition. The booking process was smooth..."
                 )
 
-                // Review Images
+                // Review Images - Changed from Box to Image
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    repeat(3) {
-                        Box(
+                    repeat(2) {
+                        Image(
+                            painter = painterResource(id = R.drawable.review2),
+                            contentDescription = "Review Image",
                             modifier = Modifier
                                 .size(100.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color(0xFFEEEEEE))
                         )
                     }
+                    Image(
+                        painter = painterResource(id = R.drawable.review),
+                        contentDescription = "Review Image",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -375,76 +390,82 @@ fun EquipmentDetailPage() {
             }
         }
 
-        // Bottom Action Bar
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .background(Color.White)
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .zIndex(10f),
-            contentAlignment = Alignment.Center
+                .zIndex(10f)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            // Bottom Action Bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .background(Color.White)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                contentAlignment = Alignment.Center
             ) {
-                // Available Slot button (replaced Chat button)
-                Button(
-                    onClick = { showCalendarDialog = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = Color(0xFF4CAF50)
-                    ),
-                    border = ButtonDefaults.outlinedButtonBorder,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(56.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                    // Available Slot button (replaced Chat button)
+                    Button(
+                        onClick = { showCalendarDialog = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color(0xFF4CAF50)
+                        ),
+                        border = ButtonDefaults.outlinedButtonBorder,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Calendar",
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Calendar",
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = selectedDate?.let {
+                                    it.format(DateTimeFormatter.ofPattern("dd MMM"))
+                                } ?: "Available Slot",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+
+                    // Book Now button
+                    Button(
+                        onClick = { /* Handle booking */ },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF4CAF50),
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .weight(2f)
+                            .height(56.dp),
+                        enabled = selectedDate != null && selectedTimeSlot != null
+                    ) {
                         Text(
-                            text = selectedDate?.let {
-                                it.format(DateTimeFormatter.ofPattern("dd MMM"))
-                            } ?: "Available Slot",
-                            fontSize = 12.sp,
+                            text = "Book Now",
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
                     }
                 }
-
-                // Book Now button
-                Button(
-                    onClick = { /* Handle booking */ },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF4CAF50),
-                        contentColor = Color.White
-                    ),
-                    modifier = Modifier
-                        .weight(2f)
-                        .height(56.dp),
-                    enabled = selectedDate != null && selectedTimeSlot != null
-                ) {
-                    Text(
-                        text = "Book Now",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
             }
+
+            // Bottom Navigation Bar
+            BottomNavigationBar()
         }
 
         // Calendar Dialog
-// Calendar Dialog
         if (showCalendarDialog) {
             Dialog(onDismissRequest = { showCalendarDialog = false }) {
                 Card(
@@ -535,6 +556,70 @@ fun EquipmentDetailPage() {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun BottomNavigationBar() {
+    Surface(
+        color = Color.White,
+        shadowElevation = 8.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            bottomNavItem(
+                icon = Icons.Outlined.Home,
+                label = "Home",
+                selected = false
+            )
+            bottomNavItem(
+                icon = Icons.Default.List,
+                label = "Catagories",
+                selected = false
+            )
+            bottomNavItem(
+                icon = Icons.Outlined.ShoppingCart,
+                label = "My Bookings",
+                selected = false
+            )
+            bottomNavItem(
+                icon = Icons.Outlined.AccountCircle,
+                label = "My Account",
+                selected = false
+            )
+        }
+    }
+}
+
+@Composable
+private fun bottomNavItem(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean = false
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable {
+                /* Handle navigation */
+            }
+            .padding(8.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = if (selected) Color(0xFF4CAF50) else Color.Gray,
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = if (selected) Color(0xFF4CAF50) else Color.Gray
+        )
     }
 }
 
@@ -801,3 +886,10 @@ fun ReviewItem(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun AppPreview() {
+    AgriconnectTheme {
+        EquipmentDetailPage()
+    }
+}

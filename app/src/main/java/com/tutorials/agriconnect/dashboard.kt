@@ -460,8 +460,7 @@ fun TaskBar(modifier: Modifier = Modifier, navController: NavController) {
             isSelected = selectedIndex == 1,
             onClick = {
                 selectedIndex = 1
-                // You can add navigation to categories screen if needed
-            }
+                navController.navigate("categories")            }
         )
 
         // My Bookings
@@ -478,8 +477,7 @@ fun TaskBar(modifier: Modifier = Modifier, navController: NavController) {
             isSelected = selectedIndex == 2,
             onClick = {
                 selectedIndex = 2
-                // You can add navigation to bookings screen if needed
-            }
+                navController.navigate("my_bookings")            }
         )
 
         // My Account
@@ -496,8 +494,7 @@ fun TaskBar(modifier: Modifier = Modifier, navController: NavController) {
             isSelected = selectedIndex == 3,
             onClick = {
                 selectedIndex = 3
-                // You can add navigation to account screen if needed
-            }
+                navController.navigate("account")            }
         )
     }
 }

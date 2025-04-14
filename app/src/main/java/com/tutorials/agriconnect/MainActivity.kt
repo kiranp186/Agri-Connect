@@ -23,9 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    FarmTechHomeScreen().FarmTechApp()
-                }
-            }
+                    AppNavigation()       }
         }
     }
 }
@@ -61,8 +59,30 @@ fun AppNavigation() {
         }
 
         composable("dashboard") {
-            FarmersAppScreen()
+            FarmersAppScreen(navController = navController)
         }
+
+        composable("categories") {
+            FarmTechHomeScreen().FarmTechApp(navController = navController)
+        }
+
+        composable("my_bookings") {
+            MyBookings(navController = navController)
+        }
+
+        composable("account") {
+            FarmerProfileScreen(navController = navController)
+        }
+
+
+
+        composable("crop_specific") {
+            // Add your crop specific screen here
+            // For now, let's just reuse FarmersAppScreen as a placeholder
+            FarmersAppScreen(navController = navController)
+        }
+
+
 
 
     }
@@ -72,6 +92,6 @@ fun AppNavigation() {
 @Composable
 fun AppPreview() {
     AgriconnectTheme {
-        AppNavigation()
+        EquipmentDetailPage()
     }
-}
+}}

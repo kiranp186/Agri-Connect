@@ -49,6 +49,11 @@ android {
 
 dependencies {
     // Kotlin Serialization
+
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation("androidx.navigation:navigation-compose:2.7.1") // Use the latest version available
     // Existing dependencies
