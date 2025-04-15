@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.TimeUnit
 
 class SignUpPage : ComponentActivity() {
@@ -44,14 +45,6 @@ fun SignupScreen(
     var authType by remember { mutableStateOf("Phone") } // "Phone" or "Email"
 
     val context = LocalContext.current
-
-    // Firebase Auth instance - with try-catch to handle initialization errors
-    val auth = try {
-        FirebaseAuth.getInstance()
-    } catch (e: Exception) {
-        Toast.makeText(context, "Firebase initialization error: ${e.message}", Toast.LENGTH_LONG).show()
-        null
-    }
 
     // State variables for form fields
     var username by remember { mutableStateOf("") }
@@ -158,13 +151,8 @@ fun SignupScreen(
                     singleLine = true
                 )
 
-// Inside your phone auth button click
                 Button(
                     onClick = {
-                        if (auth == null) {
-                            Toast.makeText(context, "Firebase not initialized. Please restart the app.", Toast.LENGTH_LONG).show()
-                            return@Button
-                        }
                         try {
                             isLoading = true
                             // Format phone number with country code (assuming India)
@@ -195,7 +183,8 @@ fun SignupScreen(
 
                             // Use try-catch for all Firebase operations
                             try {
-                                val options = PhoneAuthOptions.newBuilder(auth!!)
+                                val auth = FirebaseAuth.getInstance()
+                                val options = PhoneAuthOptions.newBuilder(auth)
                                     .setPhoneNumber(formattedPhoneNumber)
                                     .setTimeout(60L, TimeUnit.SECONDS)
                                     .setActivity(context as ComponentActivity)
@@ -402,24 +391,52 @@ fun SignupScreen(
             // Sign Up button
             Button(
                 onClick = {
-                    if (auth == null) {
-                        Toast.makeText(context, "Firebase not initialized. Please restart the app.", Toast.LENGTH_LONG).show()
-                        return@Button
-                    }
                     isLoading = true
                     if (authType == "Phone" && otpSent) {
                         // Verify OTP and complete sign up
                         try {
                             val credential = PhoneAuthProvider.getCredential(verificationId, otp)
+                            val auth = FirebaseAuth.getInstance()
+
                             auth.signInWithCredential(credential)
                                 .addOnCompleteListener { task ->
-                                    isLoading = false
                                     if (task.isSuccessful) {
                                         // Phone verification successful, continue with registration
-                                        Toast.makeText(context, "OTP verified successfully!", Toast.LENGTH_SHORT).show()
-                                        onSignupComplete()
+                                        val userId = auth.currentUser?.uid
+
+                                        if (userId != null) {
+                                            // Create user data map
+                                            val userMap = hashMapOf(
+                                                "username" to username,
+                                                "phoneNumber" to phoneNumber,
+                                                "userType" to selectedUserType,
+                                                "state" to state,
+                                                "district" to district,
+                                                "taluk" to taluk,
+                                                "address" to address,
+                                                "authType" to "phone",
+                                                "createdAt" to com.google.firebase.Timestamp.now()
+                                            )
+
+                                            // Save to Firestore
+                                            val db = FirebaseFirestore.getInstance()
+                                            db.collection("users").document(userId).set(userMap)
+                                                .addOnSuccessListener {
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Account created successfully!", Toast.LENGTH_SHORT).show()
+                                                    onSignupComplete()
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Failed to save user data: ${e.message}", Toast.LENGTH_LONG).show()
+                                                }
+                                        } else {
+                                            isLoading = false
+                                            Toast.makeText(context, "Error: User ID not found", Toast.LENGTH_LONG).show()
+                                        }
                                     } else {
                                         // Phone verification failed
+                                        isLoading = false
                                         Toast.makeText(context, "OTP verification failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                                     }
                                 }
@@ -430,15 +447,47 @@ fun SignupScreen(
                     } else if (authType == "Email") {
                         // Email and password sign up
                         if (email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
+                            val auth = FirebaseAuth.getInstance()
+
                             auth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { task ->
-                                    isLoading = false
                                     if (task.isSuccessful) {
-                                        // Email registration successful
-                                        Toast.makeText(context, "Account created successfully!", Toast.LENGTH_SHORT).show()
-                                        onSignupComplete()
+                                        // Email registration successful, save to Firestore
+                                        val userId = auth.currentUser?.uid
+
+                                        if (userId != null) {
+                                            // Create user data map
+                                            val userMap = hashMapOf(
+                                                "username" to username,
+                                                "email" to email,
+                                                "userType" to selectedUserType,
+                                                "state" to state,
+                                                "district" to district,
+                                                "taluk" to taluk,
+                                                "address" to address,
+                                                "authType" to "email",
+                                                "createdAt" to com.google.firebase.Timestamp.now()
+                                            )
+
+                                            // Save to Firestore
+                                            val db = FirebaseFirestore.getInstance()
+                                            db.collection("users").document(userId).set(userMap)
+                                                .addOnSuccessListener {
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Account created successfully!", Toast.LENGTH_SHORT).show()
+                                                    onSignupComplete()
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    isLoading = false
+                                                    Toast.makeText(context, "Failed to save user data: ${e.message}", Toast.LENGTH_LONG).show()
+                                                }
+                                        } else {
+                                            isLoading = false
+                                            Toast.makeText(context, "Error: User ID not found", Toast.LENGTH_LONG).show()
+                                        }
                                     } else {
                                         // Email registration failed
+                                        isLoading = false
                                         Toast.makeText(context, "Registration failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                                     }
                                 }
@@ -451,8 +500,13 @@ fun SignupScreen(
                         Toast.makeText(context, "Please complete authentication first", Toast.LENGTH_SHORT).show()
                     }
                 },
-                enabled = !isLoading && ((authType == "Phone" && otpSent && otp.length == 6) ||
-                        (authType == "Email" && email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword)),
+                enabled = !isLoading &&
+                        ((authType == "Phone" && otpSent && otp.length == 6) ||
+                                (authType == "Email" && email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword)) &&
+                        username.isNotEmpty() &&
+                        selectedUserType != "Select User Type" &&
+                        state.isNotEmpty() &&
+                        district.isNotEmpty(),
                 modifier = Modifier
                     .weight(2f)
                     .height(50.dp)
