@@ -9,9 +9,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.tutorials.agriconnect.ui.theme.AgriconnectTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()       }
+                    AppNavigation()     }
         }
     }
 }
@@ -59,7 +61,7 @@ fun AppNavigation() {
                 },
                 onSignupComplete = {
                     // Navigate to dashboard when signup is complete
-                    navController.navigate("dashboard") {
+                    navController.navigate("login") {
                         // Clear the back stack so user can't go back to signup/login after successful signup
                         popUpTo("login") { inclusive = true }
                     }
@@ -85,10 +87,38 @@ fun AppNavigation() {
 
 
 
-        composable("crop_specific") {
-            // Add your crop specific screen here
-            // For now, let's just reuse FarmersAppScreen as a placeholder
-            FarmersAppScreen(navController = navController)
+        composable(
+            "crop_specific/{cropName}",
+            arguments = listOf(navArgument("cropName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            // Extract the crop name from the navigation arguments
+            val cropName = backStackEntry.arguments?.getString("cropName") ?: "Unknown Crop"
+
+            // Pass the crop name to the CropSpecificScreen
+            CropSpecificScreen(
+                navController = navController,
+                cropName = cropName,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+
+        composable(
+            "equipment_detail/{equipmentId}",
+            arguments = listOf(navArgument("equipmentId") {
+                type = NavType.StringType
+            })
+        ) {
+                backStackEntry ->
+            // Extract the equipment ID from the navigation arguments
+            val equipmentId = backStackEntry.arguments?.getString("equipmentId") ?: "0"
+            EquipmentDetailPage(
+                navController = navController,
+                equipmentId = equipmentId,
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
 
 

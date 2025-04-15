@@ -269,7 +269,7 @@ private fun BottomNavigationBar(modifier: Modifier = Modifier, navController: Na
             bottomnavitem(
                 icon = Icons.Outlined.ShoppingCart,
                 label = "My Bookings",
-                selected = true,
+                selected = false,
                 onClick = {
                     navController.navigate("my_bookings")
                 }
@@ -277,7 +277,7 @@ private fun BottomNavigationBar(modifier: Modifier = Modifier, navController: Na
             bottomnavitem(
                 icon = Icons.Outlined.AccountCircle,
                 label = "My Account",
-                selected = false,
+                selected = true,
                 onClick = {
                     navController.navigate("account")
                 }

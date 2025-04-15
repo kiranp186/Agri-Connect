@@ -255,8 +255,7 @@ fun SidebarOverlay(
                         title = "My Account",
                         onClick = {
                             onDismiss()
-                            // You can add navigation here if needed
-                        }
+                            navController.navigate("account")                        }
                     ) {
                         Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null)
                     }
@@ -342,7 +341,9 @@ fun SidebarOverlay(
 
                     SidebarMenuItem(
                         title = "My Bookings",
-                        onClick = { /* Handle navigation */ }
+                        onClick = { onDismiss()
+                            navController.navigate("my_bookings")
+                        }
                     ) {
                         Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = null)
                     }
@@ -362,7 +363,7 @@ fun SidebarOverlay(
                         onClick = {
                             onDismiss()
                             // Navigate back to login
-                            navController.navigate("login") {
+                            navController.navigate("get_started") {
                                 popUpTo("dashboard") { inclusive = true }
                             }
                         }
@@ -700,7 +701,7 @@ private fun CommoditiesSection(navController: NavController) {
                     commodity = commodity,
                     onClick = {
                         // Navigate to crop specific screen when commodity is clicked
-                        navController.navigate("crop_specific")
+                        navController.navigate("crop_specific/${commodity.name}")
                     }
                 )
             }
@@ -725,7 +726,7 @@ private fun CommoditiesSection(navController: NavController) {
                     commodity = commodity,
                     onClick = {
                         // Navigate to crop specific screen when commodity is clicked
-                        navController.navigate("crop_specific")
+                        navController.navigate("crop_specific/${commodity.name}")
                     }
                 )
             }

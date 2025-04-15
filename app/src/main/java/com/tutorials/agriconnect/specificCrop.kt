@@ -48,12 +48,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.navigation.NavController
 import android.util.Log
 
 @Composable
 fun CropSpecificScreen(
     cropName: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    navController: NavController
 ) {
     var equipmentList by remember { mutableStateOf<List<Equipment>>(emptyList()) }
     val context = LocalContext.current
@@ -184,13 +186,14 @@ fun CropSpecificScreen(
         BottomNavigationBar(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .zIndex(10f)
+                .zIndex(10f),
+            navController = navController
         )
     }
 }
 
 @Composable
-private fun BottomNavigationBar(modifier: Modifier = Modifier) {
+private fun BottomNavigationBar(modifier: Modifier = Modifier, navController: NavController) {
     Surface(
         color = Color.White,
         shadowElevation = 8.dp,
@@ -205,20 +208,36 @@ private fun BottomNavigationBar(modifier: Modifier = Modifier) {
             BottomNavItem(
                 icon = Icons.Outlined.Home,
                 label = "Home",
-                selected = false
+                selected = false,
+                onClick = {
+                    navController.navigate("dashboard") {
+                        popUpTo("dashboard") {
+                            inclusive = true
+                        }
+                    }
+                }
             )
             BottomNavItem(
                 icon = Icons.Default.List,
                 label = "Catagories",
-                selected = true
+                selected = true,
+                onClick = {}
             )
             BottomNavItem(
                 icon = Icons.Outlined.ShoppingCart,
-                label = "My Bookings"
+                label = "My Bookings",
+                selected = false,
+                onClick = {
+                    navController.navigate("my_bookings")
+                }
             )
             BottomNavItem(
                 icon = Icons.Outlined.AccountCircle,
-                label = "My Account"
+                label = "My Account",
+                selected = false,
+                onClick = {
+                    navController.navigate("account")
+                }
             )
         }
     }
@@ -228,14 +247,13 @@ private fun BottomNavigationBar(modifier: Modifier = Modifier) {
 fun BottomNavItem(
     icon: ImageVector,
     label: String,
-    selected: Boolean = false
+    selected: Boolean = false,
+    onClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .clickable {
-                /* Handle navigation */
-            }
+            .clickable(onClick = onClick)
             .padding(8.dp)
     ) {
         Icon(
@@ -252,9 +270,71 @@ fun BottomNavItem(
     }
 }
 
-// Note: This component reuses the EquipmentItem component from the original code
-// You can add any crop-specific customization to the EquipmentItem display if needed
-// For example, you might want to show which other crops can use this equipment
+@Composable
+fun CropEquipmentItem(equipment: Equipment) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 180.dp, max = 280.dp),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Equipment Image
+            val imageResourceId = getDrawableResourceId(equipment.image)
+            Image(
+                painter = painterResource(id = imageResourceId),
+                contentDescription = equipment.equipment_name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.7f)
+            )
+
+            // Equipment name and details
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.3f)
+                    .background(Color.White)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = equipment.equipment_name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF4CAF50),
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Text(
+                        text = equipment.category,
+                        fontSize = 12.sp,
+                        color = Color(0xFF666666),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = equipment.details,
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun CropEquipmentItem(equipment: Equipment, cropName: String) {

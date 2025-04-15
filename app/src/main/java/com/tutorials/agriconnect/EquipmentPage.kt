@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.tutorials.agriconnect.ui.theme.AgriconnectTheme
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -66,7 +68,11 @@ val availableTimeSlots = listOf(
 )
 
 @Composable
-fun EquipmentDetailPage() {
+fun EquipmentDetailPage(
+    navController: NavController = rememberNavController(),
+    equipmentId: String = "0",
+    onBackClick: () -> Unit = {}
+) {
     val scrollState = rememberScrollState()
     val lazyRowState = rememberLazyListState()
     val imageItems = (1..5).toList() // List of 5 images
@@ -149,7 +155,7 @@ fun EquipmentDetailPage() {
 
                 // Back button for top part of the screen
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onBackClick,
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .padding(8.dp)
@@ -372,7 +378,7 @@ fun EquipmentDetailPage() {
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowLeft,
                         contentDescription = "Back",
