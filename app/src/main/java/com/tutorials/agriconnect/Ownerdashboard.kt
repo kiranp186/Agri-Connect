@@ -139,12 +139,7 @@ fun OwnerAppScreen(navController: NavController = rememberNavController()) {
                                     shape = RoundedCornerShape(12.dp)
                                 )
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Search here...",
-                            color = Color.Gray,
-                            fontSize = 14.sp
-                        )
+
                         Spacer(modifier = Modifier.weight(1f))
                         Box(
                             modifier = Modifier
