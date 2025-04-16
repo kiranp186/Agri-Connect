@@ -1,5 +1,6 @@
 package com.tutorials.agriconnect
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -38,6 +39,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
@@ -48,9 +50,20 @@ import kotlinx.coroutines.isActive
  * Updated to support navigation
  */
 @Composable
-fun OwnerAppScreen(navController: NavController = rememberNavController()) {
+fun OwnerAppScreen(navController: NavController = rememberNavController(),
+                   showEquipmentAddedMessage: Boolean = false
+)
+{
     val scrollState = rememberScrollState()
     var isOwnerSidebarVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    LaunchedEffect(showEquipmentAddedMessage) {
+        if (showEquipmentAddedMessage) {
+            Toast.makeText(context, "Equipment added successfully!", Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Main content with scroll
@@ -331,7 +344,7 @@ private fun MyEquipmentsSection(navController: NavController) {
 
             // Add Equipment Button
             Button(
-                onClick = { /* Navigate to Add Equipment Screen */ },
+                onClick = { navController.navigate("add_equipment") },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF4A6118)
                 ),
@@ -668,7 +681,11 @@ fun OwnerSidebarMenuItem(
 
 @Composable
 fun Ownerdashboard(navController: NavController) {
-    OwnerAppScreen(navController)
+    // Get navigation parameters
+    val equipmentAdded = navController.currentBackStackEntry
+        ?.arguments?.getString("equipment_added").toBoolean()
+
+    OwnerAppScreen(navController, showEquipmentAddedMessage = equipmentAdded)
 }
 
 @Preview(showBackground = true)

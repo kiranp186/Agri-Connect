@@ -34,13 +34,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import java.util.Calendar
 
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EquipmentOwnerDashboardScreen() {
+fun EquipmentOwnerDashboardScreen(navController: NavController = rememberNavController()) {
     val context = LocalContext.current
 
     var ownerName by remember { mutableStateOf("") }
@@ -153,6 +155,9 @@ fun EquipmentOwnerDashboardScreen() {
             onClick = {
                 // Handle submit logic here
                 Toast.makeText(context, "Submitted Successfully!", Toast.LENGTH_SHORT).show()
+                navController.navigate("owner_dashboard?equipment_added=true") {
+                    popUpTo("owner_dashboard") { inclusive = true }
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
