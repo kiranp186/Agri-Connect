@@ -110,6 +110,20 @@ fun AppNavigation() {
             )
         }
 
+        composable("equipment_list") {
+            equipmentlist(navController = navController)
+        }
+
+        composable(
+            "specific_category/{categoryName}",
+            arguments = listOf(navArgument("categoryName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val categoryName = backStackEntry.arguments?.getString("categoryName") ?: "Unknown Category"
+            SpecificCategoryScreen(
+                category = categoryName,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
 
 
 

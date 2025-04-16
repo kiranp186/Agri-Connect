@@ -61,10 +61,10 @@ class FarmTechHomeScreen {
                 SearchBar()
                 Spacer(modifier = Modifier.height(16.dp))
 
-                CategorySection()
+                CategorySection(navController)
                 Spacer(modifier = Modifier.height(24.dp))
 
-                FeaturedProductsSection()
+                FeaturedProductsSection(navController)
                 Spacer(modifier = Modifier.height(24.dp))
 
                 NewArrivalsSection()
@@ -125,7 +125,7 @@ class FarmTechHomeScreen {
     }
 
     @Composable
-    private fun CategorySection() {
+    private fun CategorySection(navController: NavController) {
         Text(
             text = "Categories",
             fontWeight = FontWeight.Bold,
@@ -151,7 +151,11 @@ class FarmTechHomeScreen {
                 CategoryItem(
                     icon = category.icon,
                     title = category.title,
-                    color = category.color
+                    color = category.color,
+                    onClick = {
+                        // Navigate to specific category screen when clicked
+                        navController.navigate("specific_category/${category.title}")
+                    }
                 )
             }
         }
@@ -160,10 +164,13 @@ class FarmTechHomeScreen {
     data class CategoryData(val icon: Int, val title: String, val color: Color)
 
     @Composable
-    private fun CategoryItem(icon: Int, title: String, color: Color) {
+    private fun CategoryItem(icon: Int,
+                             title: String,
+                             color: Color,onClick: ()-> Unit) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(66.dp)
+                .clickable(onClick = onClick)
         ) {
             Box(
                 modifier = Modifier
@@ -193,7 +200,7 @@ class FarmTechHomeScreen {
     }
 
     @Composable
-    private fun FeaturedProductsSection() {
+    private fun FeaturedProductsSection(navController: NavController) {
         SectionHeader(title = "Featured Products")
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -205,19 +212,21 @@ class FarmTechHomeScreen {
             ProductCard(
                 image = R.drawable.tractor,
                 title = "John Deere 6155E-159 HP Tractor",
-                price = "Rs8,500",
+                price = "₹8,500",
                 rating = 4.8f,
                 reviewCount = 180,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                navController = navController
             )
 
             ProductCard(
                 image = R.drawable.harvestrer,
                 title = "Yanmar Combine Harvester",
-                price = "Rs10,000",
+                price = "₹10,000",
                 rating = 4.7f,
                 reviewCount = 157,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                navController = navController
             )
         }
     }
@@ -234,18 +243,18 @@ class FarmTechHomeScreen {
             HorizontalProductCard(
                 image = R.drawable.drone,
                 title = "Agras T40 Agricultural Drone Sprayer",
-                price = "Rs13,000"
+                price = "₹13,000"
             )
 
             HorizontalProductCard(
                 image = R.drawable.transplanter,
                 title = "2ZS-4D Self-Propelled Rice Transplanter",
-                price = "Rs9,999"
+                price = "₹9,999"
             )
             HorizontalProductCard(
                 image = R.drawable.special2,
                 title = "John Deere's Autonomous Farming Tractor",
-                price = "Rs11,999"
+                price = "₹11,999"
             )
         }
     }
@@ -280,12 +289,22 @@ class FarmTechHomeScreen {
         price: String,
         rating: Float,
         reviewCount: Int,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        navController: NavController
     ) {
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .height(230.dp),
+                .height(230.dp)
+                .clickable {
+                    // Navigate to equipment detail page when the card is clicked
+                    if (title == "John Deere 6155E-159 HP Tractor") {
+                        navController.navigate("equipment_detail/1")
+                    } else {
+                        // For other products, you can pass different IDs or handle differently
+                        navController.navigate("equipment_detail/0")
+                    }
+                },
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)

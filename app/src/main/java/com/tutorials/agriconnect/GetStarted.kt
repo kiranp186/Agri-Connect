@@ -86,24 +86,7 @@ fun GetStartedScreen(onGetStartedClick: () -> Unit = {}) {
             Spacer(modifier = Modifier.weight(1f))
 
             // Stat cards
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                // Growth stat card
-                StatCard(
-                    emoji = "📈",
-                    label = "Growth",
-                    value = "12 cm"
-                )
 
-                // Moisture stat card
-                StatCard(
-                    emoji = "💧",
-                    label = "Moisture",
-                    value = "75%"
-                )
-            }
 
             Spacer(modifier = Modifier.height(24.dp))
 

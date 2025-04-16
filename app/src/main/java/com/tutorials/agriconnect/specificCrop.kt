@@ -221,7 +221,9 @@ private fun BottomNavigationBar(modifier: Modifier = Modifier, navController: Na
                 icon = Icons.Default.List,
                 label = "Catagories",
                 selected = true,
-                onClick = {}
+                onClick = {
+                    navController.navigate("my_bookings")
+                }
             )
             BottomNavItem(
                 icon = Icons.Outlined.ShoppingCart,
@@ -277,7 +279,7 @@ fun equipmentItem(equipment: Equipment,navController: NavController) {
             .fillMaxWidth()
             .heightIn(min = 180.dp, max = 280.dp)
             .clickable {
-                navController.navigate("equipment_detail/{equipmentId}")
+                navController.navigate("equipment_list")
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp),

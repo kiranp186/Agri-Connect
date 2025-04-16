@@ -71,7 +71,7 @@ val availableTimeSlots = listOf(
 fun EquipmentDetailPage(
     navController: NavController = rememberNavController(),
     equipmentId: String = "0",
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {navController.popBackStack()}
 ) {
     val scrollState = rememberScrollState()
     val lazyRowState = rememberLazyListState()
@@ -227,7 +227,7 @@ fun EquipmentDetailPage(
 
                 // Price
                 Text(
-                    text = "₹ 5000",
+                    text = "₹ 8500",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF4CAF50),

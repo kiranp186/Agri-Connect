@@ -30,7 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tutorials.agriconnect.ui.theme.AgriconnectTheme
 
 @Composable
-fun equipmentlist() {
+fun equipmentlist(navController: NavController=rememberNavController()) {
     val scrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -81,51 +81,66 @@ fun equipmentlist() {
 
 
                 // Current orders list
-                repeat(3) {
+
                     currentorderitem(
-                        equipmentName = "Tractor ${it + 1}",
-                        ownerName = "Owner Name ${it + 1}",
-                        dateBooked = "March ${it + 5}, 2025"
+                        equipmentName = " John Deer Tractor",
+                        ownerName = "Shankre Gowda",
+                        dateBooked = "Goruru,Hassan,Hassan",
+                        mrp = "₹6000",
+                        navController = navController
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                }
+
+                currentorderitem(
+                    equipmentName = "Mahindra Tractor",
+                    ownerName = "Mani",
+                    dateBooked = "Kundoor,Aluru,Hassan",
+                    mrp = "₹4800"
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                currentorderitem(
+                    equipmentName = "Sonalika Tractor",
+                    ownerName = "Mohan",
+                    dateBooked = "S.Belagola,C.R Patna,Hassan",
+                    mrp = "₹5000"
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
 
                 // Divider between sections
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    thickness = 1.dp,
-                    color = Color.LightGray
-                )
+
 
                 // PAST ORDERS SECTION
 
 
                 // Past orders list
                 pastorderitem(
-                    equipmentName = "Harvester 1",
-                    ownerName = "John Smith",
-                    dateBooked = "February 20, 2025",
-                    isCompleted = true
+                    equipmentName = "Mahindra Tractor",
+                    ownerName = "John ",
+                    dateBooked = "Dudda,Hassan",
+                    isCompleted = true,
+                    MRP= "₹4500"
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 pastorderitem(
-                    equipmentName = "Plough 2",
-                    ownerName = "Jane Doe",
-                    dateBooked = "February 15, 2025",
-                    isCompleted = false
+                    equipmentName = "Sonalika Tractors",
+                    ownerName = "Ramanna",
+                    dateBooked = "Adaguru,Hassan,Hassan",
+                    isCompleted = false,
+                    MRP = "₹5200"
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 pastorderitem(
-                    equipmentName = "Seeder 3",
-                    ownerName = "David Johnson",
-                    dateBooked = "February 10, 2025",
-                    isCompleted = true
+                    equipmentName = "Mahindra Tractor",
+                    ownerName = "Swami",
+                    dateBooked = "Aduvalli,Beluru,Hassan",
+                    isCompleted = true,
+                    MRP = "₹5000"
                 )
 
                 // Extra space at the bottom for better UX
@@ -225,12 +240,21 @@ fun equipmentlist() {
 fun currentorderitem(
     equipmentName: String,
     ownerName: String,
-    dateBooked: String
+    dateBooked: String,
+    mrp: String,
+    navController: NavController? = null
+
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp),
+            .height(150.dp)
+            .clickable {
+                // Navigate only if it's the John Deer Tractor
+                if (equipmentName.contains("John Deer Tractor", ignoreCase = true)) {
+                    navController?.navigate("equipment_detail/1")
+                }
+            },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -265,7 +289,7 @@ fun currentorderitem(
             ) {
                 Text(
                     text = equipmentName,
-                    fontSize = 18.sp,
+                    fontSize = 19.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF4A6118)
                 )
@@ -274,16 +298,23 @@ fun currentorderitem(
 
                 Text(
                     text = ownerName,
-                    fontSize = 16.sp,
+                    fontSize = 17.sp,
                     color = Color.DarkGray
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Date Booked: $dateBooked",
-                    fontSize = 14.sp,
+                    text = "$dateBooked",
+                    fontSize = 15.sp,
                     color = Color.Gray
+                )
+
+
+                Text(
+                    text = "$mrp",
+                    fontSize = 20.sp,
+                    color = Color(0xFF4A6118)
                 )
             }
 
@@ -292,32 +323,16 @@ fun currentorderitem(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.width(60.dp)
             ) {
-                Text(
-                    text = "Contact",
-                    fontSize = 12.sp,
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center
-                )
+
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Message icon
-                Icon(
-                    imageVector = Icons.Default.MailOutline,
-                    contentDescription = "Message",
-                    tint = Color(0xFF4A6118),
-                    modifier = Modifier.size(24.dp)
-                )
+
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Phone icon
-                Icon(
-                    imageVector = Icons.Default.Phone,
-                    contentDescription = "Call",
-                    tint = Color(0xFF4A6118),
-                    modifier = Modifier.size(24.dp)
-                )
             }
         }
     }
@@ -328,12 +343,13 @@ fun pastorderitem(
     equipmentName: String,
     ownerName: String,
     dateBooked: String,
-    isCompleted: Boolean
+    isCompleted: Boolean,
+    MRP:String
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp),
+            .height(150.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -368,7 +384,7 @@ fun pastorderitem(
             ) {
                 Text(
                     text = equipmentName,
-                    fontSize = 18.sp,
+                    fontSize = 19.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF4A6118)
                 )
@@ -377,15 +393,20 @@ fun pastorderitem(
 
                 Text(
                     text = ownerName,
-                    fontSize = 16.sp,
+                    fontSize = 17.sp,
                     color = Color.DarkGray
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Date Booked: $dateBooked",
-                    fontSize = 14.sp,
+                    text = "$dateBooked",
+                    fontSize = 15.sp,
+                    color = Color.Gray
+                )
+                Text(
+                    text = "$MRP",
+                    fontSize = 20.sp,
                     color = Color.Gray
                 )
             }
@@ -396,39 +417,19 @@ fun pastorderitem(
                 modifier = Modifier.width(80.dp)
             ) {
                 if (isCompleted) {
-                    Text(
-                        text = "Order Completed",
-                        fontSize = 12.sp,
-                        color = Color(0xFF4CAF50),
-                        textAlign = TextAlign.Center
-                    )
+
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Green tick icon
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "Completed",
-                        tint = Color(0xFF4CAF50),
-                        modifier = Modifier.size(24.dp)
-                    )
+
                 } else {
-                    Text(
-                        text = "Order Cancelled",
-                        fontSize = 12.sp,
-                        color = Color(0xFFF44336),
-                        textAlign = TextAlign.Center
-                    )
+
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Red cross icon
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Cancelled",
-                        tint = Color(0xFFF44336),
-                        modifier = Modifier.size(24.dp)
-                    )
+
                 }
             }
         }
