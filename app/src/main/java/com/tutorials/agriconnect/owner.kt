@@ -66,7 +66,7 @@ fun EquipmentOwnerDashboardScreen() {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Equipment Owner Dashboard", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text("Adding new equipment and details ", fontSize = 24.sp, fontWeight = FontWeight.Bold)
 
         OutlinedTextField(
             value = ownerName,
@@ -117,7 +117,7 @@ fun EquipmentOwnerDashboardScreen() {
         OutlinedTextField(
             value = usagePurpose,
             onValueChange = { usagePurpose = it },
-            label = { Text("Why specifically used") },
+            label = { Text("Description about equipment") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -141,26 +141,11 @@ fun EquipmentOwnerDashboardScreen() {
         OutlinedTextField(
             value = cost,
             onValueChange = { cost = it },
-            label = { Text("Cost (per hour/day)") },
+            label = { Text("Cost (per hour)") },
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Calendar date selection
-        val datePickerDialog = remember {
-            DatePickerDialog(
-                context,
-                { _, year, month, dayOfMonth ->
-                    selectedDate = "$dayOfMonth/${month + 1}/$year"
-                },
-                Calendar.getInstance().get(Calendar.YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-            )
-        }
 
-        Button(onClick = { datePickerDialog.show() }) {
-            Text(text = if (selectedDate.isNotEmpty()) "Available Date: $selectedDate" else "Select Available Date")
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
