@@ -31,17 +31,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // User data model
+// Update your UserData class with nullable fields and proper types
 data class UserData(
     val uid: String = "",
     val username: String = "",
-    val phoneNumber: String = "",
-    val email: String = "",
+    val phoneNumber: String? = null,
+    val email: String? = null,
     val userType: String = "",
     val state: String = "",
     val district: String = "",
     val taluk: String = "",
     val address: String = "",
-    val createdAt: Long = System.currentTimeMillis()
+    val authType: String = "",
+    // Handle Timestamp conversion properly
+    val createdAt: com.google.firebase.Timestamp? = null
 )
 
 // Singleton object to store current user data throughout the app
@@ -102,6 +105,7 @@ fun LoginScreen(
     var isLoading by remember { mutableStateOf(false) }
 
     // Function to fetch user data
+    // Updated fetchUserData function with better error handling
     fun fetchUserData(userId: String) {
         if (db == null) {
             Toast.makeText(context, "Database not initialized", Toast.LENGTH_LONG).show()
@@ -114,31 +118,60 @@ fun LoginScreen(
                 val documentSnapshot = db.collection("users").document(userId).get().await()
 
                 if (documentSnapshot.exists()) {
-                    // Convert Firestore document to UserData object
-                    val userData = documentSnapshot.toObject(UserData::class.java)
+                    try {
+                        // Try to convert to UserData class
+                        val userData = documentSnapshot.toObject(UserData::class.java)
 
-                    // Store in session
-                    userData?.let {
-                        UserSession.currentUser = it
+                        // Store in session
+                        userData?.let {
+                            // Make sure to set the uid if it's not already set
+                            val updatedUserData = it.copy(uid = userId)
+                            UserSession.currentUser = updatedUserData
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                Toast.makeText(context, "Welcome, ${it.username}!", Toast.LENGTH_SHORT).show()
+                                onLoginClick()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        // If automatic conversion fails, try manual mapping
                         CoroutineScope(Dispatchers.Main).launch {
-                            Toast.makeText(context, "Welcome, ${it.username}!", Toast.LENGTH_SHORT).show()
-                            onLoginClick()
+                            Toast.makeText(context, "Error converting user data: ${e.message}", Toast.LENGTH_LONG).show()
+                            try {
+                                // Manual mapping as fallback
+                                val userData = UserData(
+                                    uid = userId,
+                                    username = documentSnapshot.getString("username") ?: "",
+                                    phoneNumber = documentSnapshot.getString("phoneNumber"),
+                                    email = documentSnapshot.getString("email"),
+                                    userType = documentSnapshot.getString("userType") ?: "",
+                                    state = documentSnapshot.getString("state") ?: "",
+                                    district = documentSnapshot.getString("district") ?: "",
+                                    taluk = documentSnapshot.getString("taluk") ?: "",
+                                    address = documentSnapshot.getString("address") ?: "",
+                                    authType = documentSnapshot.getString("authType") ?: "",
+                                    createdAt = documentSnapshot.getTimestamp("createdAt")
+                                )
+
+                                UserSession.currentUser = userData
+                                Toast.makeText(context, "Welcome, ${userData.username}!", Toast.LENGTH_SHORT).show()
+                                onLoginClick()
+                            } catch (e2: Exception) {
+                                Toast.makeText(context, "Manual mapping failed: ${e2.message}", Toast.LENGTH_LONG).show()
+                                isLoading = false
+                            }
                         }
                     }
                 } else {
                     // User exists in Auth but not in Firestore - handle this edge case
                     CoroutineScope(Dispatchers.Main).launch {
                         Toast.makeText(context, "User profile not found. Please complete your profile.", Toast.LENGTH_LONG).show()
-                        // You could navigate to profile completion screen here
+                        isLoading = false
                     }
                 }
             } catch (e: Exception) {
                 CoroutineScope(Dispatchers.Main).launch {
                     Toast.makeText(context, "Error fetching user data: ${e.message}", Toast.LENGTH_LONG).show()
-                    isLoading = false
-                }
-            } finally {
-                CoroutineScope(Dispatchers.Main).launch {
                     isLoading = false
                 }
             }
