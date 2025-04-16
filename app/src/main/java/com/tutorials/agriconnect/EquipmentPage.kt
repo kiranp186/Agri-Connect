@@ -67,16 +67,26 @@ val availableTimeSlots = listOf(
     "04:00 PM - 06:00 PM"
 )
 
+// Sample equipment data - can be expanded later
+val equipmentDetailsMap = mapOf(
+    "1" to "John Deere 6135E-135 HP Tractor",
+    "2" to "Mahindra 575 DI XP Plus Tractor",
+    "3" to "New Holland 3600-2 Tractor",
+    // Add more equipment as needed
+)
+
 @Composable
 fun EquipmentDetailPage(
+    equipmentId: String = "1",
     navController: NavController = rememberNavController(),
-    equipmentId: String = "0",
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = { navController.popBackStack() }
 ) {
     val scrollState = rememberScrollState()
     val lazyRowState = rememberLazyListState()
     val imageItems = (1..5).toList() // List of 5 images
-    val coroutineScope = rememberCoroutineScope()
+
+    // Get equipment name based on ID with fallback
+    val equipmentName = equipmentDetailsMap[equipmentId] ?: "John Deere 6135E-135 HP Tractor"
 
     // State for calendar dialog
     var showCalendarDialog by remember { mutableStateOf(false) }
@@ -177,9 +187,9 @@ fun EquipmentDetailPage(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // Title
+                // Title - Use the equipment name from the ID
                 Text(
-                    text = "John Deere 6135E-135 HP Tractor",
+                    text = equipmentName,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -448,7 +458,10 @@ fun EquipmentDetailPage(
 
                     // Book Now button
                     Button(
-                        onClick = { /* Handle booking */ },
+                        onClick = {
+                            // Navigate to payment screen
+                            navController.navigate("payment_screen")
+                        },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF4CAF50),
                             contentColor = Color.White
@@ -466,9 +479,6 @@ fun EquipmentDetailPage(
                     }
                 }
             }
-
-            // Bottom Navigation Bar
-
         }
 
         // Calendar Dialog
@@ -562,70 +572,6 @@ fun EquipmentDetailPage(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun BottomNavigationBar() {
-    Surface(
-        color = Color.White,
-        shadowElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            bottomNavItem(
-                icon = Icons.Outlined.Home,
-                label = "Home",
-                selected = false
-            )
-            bottomNavItem(
-                icon = Icons.Default.List,
-                label = "Catagories",
-                selected = false
-            )
-            bottomNavItem(
-                icon = Icons.Outlined.ShoppingCart,
-                label = "My Bookings",
-                selected = false
-            )
-            bottomNavItem(
-                icon = Icons.Outlined.AccountCircle,
-                label = "My Account",
-                selected = false
-            )
-        }
-    }
-}
-
-@Composable
-private fun bottomNavItem(
-    icon: ImageVector,
-    label: String,
-    selected: Boolean = false
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .clickable {
-                /* Handle navigation */
-            }
-            .padding(8.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = if (selected) Color(0xFF4CAF50) else Color.Gray,
-            modifier = Modifier.size(24.dp)
-        )
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = if (selected) Color(0xFF4CAF50) else Color.Gray
-        )
     }
 }
 
@@ -894,7 +840,7 @@ fun ReviewItem(
 
 @Preview(showBackground = true)
 @Composable
-fun AppPreview() {
+fun EquipmentDetailPreview() {
     AgriconnectTheme {
         EquipmentDetailPage()
     }

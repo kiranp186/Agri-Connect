@@ -25,11 +25,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()
-                }
-            }
+                    AppNavigation()    }
         }
     }
+}
 
     @Composable
     fun AppNavigation() {
@@ -106,16 +105,25 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            composable("equipment_detail/{equipmentId}") { backStackEntry ->
-                val equipmentId = backStackEntry.arguments?.getString("equipmentId") ?: "0"
-                EquipmentDetailPage(
-                    equipmentId = equipmentId,
-                    navController = navController
-                )
-            }
-
-
+        composable("equipment_detail/{equipmentId}") { backStackEntry ->
+            val equipmentId = backStackEntry.arguments?.getString("equipmentId") ?: "0"
+            EquipmentDetailPage(
+                equipmentId = equipmentId,
+                navController = navController
+            )
         }
+        composable("payment_screen") {
+            RazorpayPaymentScreen(
+                navController = navController,
+                amount = 5000.0, // Pass the equipment rental amount
+                equipmentName = "John Deere 6135E-135 HP Tractor" // Pass equipment name
+            )
+        }
+
+
+
+
     }
+}
 
 }

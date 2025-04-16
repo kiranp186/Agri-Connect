@@ -212,7 +212,7 @@ class FarmTechHomeScreen {
             )
 
             ProductCard(
-                image = R.drawable.harvester,
+                image = R.drawable.harvestrer,
                 title = "Yanmar Combine Harvester",
                 price = "Rs10,000",
                 rating = 4.7f,
