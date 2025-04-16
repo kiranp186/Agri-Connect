@@ -300,7 +300,7 @@ data class EquipmentItem(
     val id: String,
     val name: String,
     val imageResId: Int,
-    val pricePerDay: Double,
+    val pricePerHour: Double,
     val status: String = "Available" // Default status
 )
 
@@ -434,7 +434,7 @@ private fun EquipmentCard(equipment: EquipmentItem, onClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "₹${equipment.pricePerDay}/day",
+                    text = "₹${equipment.pricePerHour}/Hour",
                     color = Color(0xFF4A6118),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
