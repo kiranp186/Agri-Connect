@@ -468,7 +468,7 @@ fun EquipmentDetailPage(
             }
 
             // Bottom Navigation Bar
-            BottomNavigationBar()
+
         }
 
         // Calendar Dialog

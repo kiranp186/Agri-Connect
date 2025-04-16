@@ -171,7 +171,7 @@ fun CropSpecificScreen(
                         }
 
                         items(equipment) { item ->
-                            EquipmentItem(equipment = item)
+                            equipmentItem(equipment = item,navController = navController)
                         }
 
                         item {
@@ -271,11 +271,14 @@ fun BottomNavItem(
 }
 
 @Composable
-fun CropEquipmentItem(equipment: Equipment) {
+fun equipmentItem(equipment: Equipment,navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 180.dp, max = 280.dp),
+            .heightIn(min = 180.dp, max = 280.dp)
+            .clickable {
+                navController.navigate("equipment_detail/{equipmentId}")
+            },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)

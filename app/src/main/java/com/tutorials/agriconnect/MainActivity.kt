@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()     }
+                    AppNavigation()    }
         }
     }
 }
@@ -102,24 +102,14 @@ fun AppNavigation() {
             )
         }
 
-
-        composable(
-            "equipment_detail/{equipmentId}",
-            arguments = listOf(navArgument("equipmentId") {
-                type = NavType.StringType
-            })
-        ) {
-                backStackEntry ->
-            // Extract the equipment ID from the navigation arguments
+        composable("equipment_detail/{equipmentId}") { backStackEntry ->
             val equipmentId = backStackEntry.arguments?.getString("equipmentId") ?: "0"
             EquipmentDetailPage(
-                navController = navController,
                 equipmentId = equipmentId,
-                onBackClick = {
-                    navController.popBackStack()
-                }
+                navController = navController
             )
         }
+
 
 
 
