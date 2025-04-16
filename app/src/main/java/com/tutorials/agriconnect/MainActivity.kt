@@ -30,77 +30,80 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun AppNavigation() {
-    val navController = rememberNavController()
+    @Composable
+    fun AppNavigation() {
+        val navController = rememberNavController()
+        val authViewModel = androidx.lifecycle.viewmodel.compose.viewModel<AuthViewModel>()
 
-    NavHost(navController = navController, startDestination = "get_started") {
-        composable("get_started") {
-            GetStartedScreen(
-                onGetStartedClick = { navController.navigate("login") }
-            )
-        }
+        NavHost(navController = navController, startDestination = "get_started") {
+            composable("get_started") {
+                GetStartedScreen(
+                    onGetStartedClick = { navController.navigate("login") }
+                )
+            }
 
-        composable("login") {
-            LoginScreen(
-                onSignUpClick = { navController.navigate("signup") },
-                onLoginClick = {
-                    // Navigate to dashboard when login button is clicked
-                    navController.navigate("dashboard") {
-                        // Clear the back stack so user can't go back to login after successful login
-                        popUpTo("login") { inclusive = true }
-                    }
-                }
-            )
-        }
+            composable("login") {
+                LoginScreen(
+                    onSignUpClick = { navController.navigate("signup") },
+                    onLoginClick = {
+                        // Navigate to dashboard when login button is clicked
+                        navController.navigate("dashboard") {
+                            // Clear the back stack so user can't go back to login after successful login
+                            popUpTo("login") { inclusive = true }
+                        }
+                    },
+                    authViewModel = authViewModel
+                )
+            }
 
-        composable("signup") {
-            SignupScreen(
-                onNavigateBack = {
-                    navController.popBackStack()
-                },
-                onSignupComplete = {
-                    // Navigate to dashboard when signup is complete
-                    navController.navigate("login") {
-                        // Clear the back stack so user can't go back to signup/login after successful signup
-                        popUpTo("login") { inclusive = true }
-                    }
-                }
-            )
-        }
+            composable("signup") {
+                SignupScreen(
+                    onNavigateBack = {
+                        navController.popBackStack()
+                    },
+                    onSignupComplete = {
+                        // Navigate to dashboard when signup is complete
+                        navController.navigate("login") {
+                            // Clear the back stack so user can't go back to signup/login after successful signup
+                            popUpTo("login") { inclusive = true }
+                        }
+                    },
+                    authViewModel = authViewModel
+                )
+            }
 
-        composable("dashboard") {
-            FarmersAppScreen(navController = navController)
-        }
+            composable("dashboard") {
+                FarmersAppScreen(navController = navController)
+            }
 
-        composable("categories") {
-            FarmTechHomeScreen().FarmTechApp(navController = navController)
-        }
+            composable("categories") {
+                FarmTechHomeScreen().FarmTechApp(navController = navController)
+            }
 
-        composable("my_bookings") {
-            MyBookings(navController = navController)
-        }
+            composable("my_bookings") {
+                MyBookings(navController = navController)
+            }
 
-        composable("account") {
-            FarmerProfileScreen(navController = navController)
-        }
+            composable("account") {
+                FarmerProfileScreen(navController = navController)
+            }
 
 
 
-        composable(
-            "crop_specific/{cropName}",
-            arguments = listOf(navArgument("cropName") { type = NavType.StringType })
-        ) { backStackEntry ->
-            // Extract the crop name from the navigation arguments
-            val cropName = backStackEntry.arguments?.getString("cropName") ?: "Unknown Crop"
+            composable(
+                "crop_specific/{cropName}",
+                arguments = listOf(navArgument("cropName") { type = NavType.StringType })
+            ) { backStackEntry ->
+                // Extract the crop name from the navigation arguments
+                val cropName = backStackEntry.arguments?.getString("cropName") ?: "Unknown Crop"
 
-            // Pass the crop name to the CropSpecificScreen
-            CropSpecificScreen(
-                navController = navController,
-                cropName = cropName,
-                onBackClick = { navController.popBackStack() }
-            )
-        }
+                // Pass the crop name to the CropSpecificScreen
+                CropSpecificScreen(
+                    navController = navController,
+                    cropName = cropName,
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
 
         composable("equipment_detail/{equipmentId}") { backStackEntry ->
             val equipmentId = backStackEntry.arguments?.getString("equipmentId") ?: "0"
@@ -124,6 +127,13 @@ fun AppNavigation() {
                 onBackClick = { navController.popBackStack() }
             )
         }
+        composable("payment_screen") {
+            RazorpayPaymentScreen(
+                navController = navController,
+                amount = 5000.0, // Pass the equipment rental amount
+                equipmentName = "John Deere 6135E-135 HP Tractor" // Pass equipment name
+            )
+        }
 
 
 
@@ -131,10 +141,4 @@ fun AppNavigation() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AppPreview() {
-    AgriconnectTheme {
-        EquipmentDetailPage()
-    }
-}}
+}
