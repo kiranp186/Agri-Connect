@@ -914,13 +914,10 @@ private fun MyFieldsSection() {
 /**
  * A data class representing a commodity with a name and image resource
  */
-private data class Commodity(
+ private data class Commodity(
     val name: String,
     val imageResId: Int
 )
 
-@Preview(showBackground = true)
-@Composable
-fun FarmersAppScreenPreview() {
-    FarmersAppScreen()
-}
+
+

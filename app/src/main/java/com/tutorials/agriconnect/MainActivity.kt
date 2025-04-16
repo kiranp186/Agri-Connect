@@ -175,6 +175,24 @@ class MainActivity : ComponentActivity() {
                     equipmentName = "John Deere 6135E-135 HP Tractor"
                 )
             }
+
+            composable(
+                "owner_dashboard?equipment_added={equipment_added}",
+                arguments = listOf(navArgument("equipment_added") {
+                    type = NavType.StringType
+                    defaultValue = "false"
+                })
+            ) { backStackEntry ->
+                val equipmentAdded = backStackEntry.arguments?.getString("equipment_added")?.toBoolean() ?: false
+                OwnerAppScreen(
+                    navController = navController,
+                    showEquipmentAddedMessage = equipmentAdded
+                )
+            }
+
+            composable("add_equipment") {
+                EquipmentOwnerDashboardScreen(navController = navController)
+            }
         }
     }
 }
