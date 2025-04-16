@@ -1,6 +1,7 @@
 package com.tutorials.agriconnect
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,12 +9,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tutorials.agriconnect.ui.theme.AgriconnectTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,15 +28,17 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()    }
+                    AppNavigation()
+                }
+            }
         }
     }
-}
 
     @Composable
     fun AppNavigation() {
         val navController = rememberNavController()
         val authViewModel = androidx.lifecycle.viewmodel.compose.viewModel<AuthViewModel>()
+        val context = LocalContext.current
 
         NavHost(navController = navController, startDestination = "get_started") {
             composable("get_started") {
@@ -45,12 +50,49 @@ class MainActivity : ComponentActivity() {
             composable("login") {
                 LoginScreen(
                     onSignUpClick = { navController.navigate("signup") },
-                    onLoginClick = {
-                        // Navigate to dashboard when login button is clicked
-                        navController.navigate("dashboard") {
-                            // Clear the back stack so user can't go back to login after successful login
-                            popUpTo("login") { inclusive = true }
-                        }
+                    onLoginClick = { email ->
+                        val db = FirebaseFirestore.getInstance()
+                        db.collection("users")
+                            .whereEqualTo("email", email)
+                            .get()
+                            .addOnSuccessListener { querySnapshot ->
+                                if (!querySnapshot.isEmpty) {
+                                    val document = querySnapshot.documents[0]
+                                    val userType = document.getString("userType")
+
+                                    when (userType) {
+                                        "Farmer" -> {
+                                            navController.navigate("dashboard") {
+                                                popUpTo("login") { inclusive = true }
+                                            }
+                                        }
+
+                                        "Equipment Provider" -> {
+                                            navController.navigate("owner_dashboard") {
+                                                popUpTo("login") { inclusive = true }
+                                            }
+                                        }
+
+                                        else -> {
+                                            Toast.makeText(
+                                                context,
+                                                "Unknown user type: $userType",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                } else {
+                                    Toast.makeText(context, "User not found", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(
+                                    context,
+                                    "Error: ${it.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                     },
                     authViewModel = authViewModel
                 )
@@ -62,9 +104,7 @@ class MainActivity : ComponentActivity() {
                         navController.popBackStack()
                     },
                     onSignupComplete = {
-                        // Navigate to dashboard when signup is complete
                         navController.navigate("login") {
-                            // Clear the back stack so user can't go back to signup/login after successful signup
                             popUpTo("login") { inclusive = true }
                         }
                     },
@@ -74,6 +114,10 @@ class MainActivity : ComponentActivity() {
 
             composable("dashboard") {
                 FarmersAppScreen(navController = navController)
+            }
+
+            composable("owner_dashboard") {
+                OwnerAppScreen(navController = navController)
             }
 
             composable("categories") {
@@ -88,16 +132,11 @@ class MainActivity : ComponentActivity() {
                 FarmerProfileScreen(navController = navController)
             }
 
-
-
             composable(
                 "crop_specific/{cropName}",
                 arguments = listOf(navArgument("cropName") { type = NavType.StringType })
             ) { backStackEntry ->
-                // Extract the crop name from the navigation arguments
                 val cropName = backStackEntry.arguments?.getString("cropName") ?: "Unknown Crop"
-
-                // Pass the crop name to the CropSpecificScreen
                 CropSpecificScreen(
                     navController = navController,
                     cropName = cropName,
@@ -105,40 +144,37 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-        composable("equipment_detail/{equipmentId}") { backStackEntry ->
-            val equipmentId = backStackEntry.arguments?.getString("equipmentId") ?: "0"
-            EquipmentDetailPage(
-                equipmentId = equipmentId,
-                navController = navController
-            )
+            composable("equipment_detail/{equipmentId}") { backStackEntry ->
+                val equipmentId = backStackEntry.arguments?.getString("equipmentId") ?: "0"
+                EquipmentDetailPage(
+                    equipmentId = equipmentId,
+                    navController = navController
+                )
+            }
+
+            composable("equipment_list") {
+                equipmentlist(navController = navController)
+            }
+
+            composable(
+                "specific_category/{categoryName}",
+                arguments = listOf(navArgument("categoryName") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val categoryName =
+                    backStackEntry.arguments?.getString("categoryName") ?: "Unknown Category"
+                SpecificCategoryScreen(
+                    category = categoryName,
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable("payment_screen") {
+                RazorpayPaymentScreen(
+                    navController = navController,
+                    amount = 5000.0,
+                    equipmentName = "John Deere 6135E-135 HP Tractor"
+                )
+            }
         }
-
-        composable("equipment_list") {
-            equipmentlist(navController = navController)
-        }
-
-        composable(
-            "specific_category/{categoryName}",
-            arguments = listOf(navArgument("categoryName") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val categoryName = backStackEntry.arguments?.getString("categoryName") ?: "Unknown Category"
-            SpecificCategoryScreen(
-                category = categoryName,
-                onBackClick = { navController.popBackStack() }
-            )
-        }
-        composable("payment_screen") {
-            RazorpayPaymentScreen(
-                navController = navController,
-                amount = 5000.0, // Pass the equipment rental amount
-                equipmentName = "John Deere 6135E-135 HP Tractor" // Pass equipment name
-            )
-        }
-
-
-
-
     }
-}
-
 }

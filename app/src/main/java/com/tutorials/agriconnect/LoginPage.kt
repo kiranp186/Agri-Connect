@@ -41,7 +41,7 @@ class LoginPage : ComponentActivity() {
 @Composable
 fun LoginScreen(
     onSignUpClick: () -> Unit = {},
-    onLoginClick: () -> Unit = {},
+    onLoginClick: (String) -> Unit = {}, // Modified to accept the user identifier
     authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -70,7 +70,12 @@ fun LoginScreen(
             is AuthState.Success -> {
                 isLoading = false
                 Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-                onLoginClick()
+                // Pass the appropriate identifier to the callback
+                if (useEmailLogin) {
+                    onLoginClick(email)
+                } else {
+                    onLoginClick(phoneNumber)
+                }
             }
             is AuthState.Error -> {
                 isLoading = false
@@ -158,7 +163,6 @@ fun LoginScreen(
                     singleLine = true
                 )
 
-                // Find this code in your LoginScreen composable
                 Button(
                     onClick = {
                         if (phoneNumber.length == 10) {
